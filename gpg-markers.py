@@ -30,11 +30,12 @@ for (name, val) in modes:
 if mode == 0:
     usage()
 
-n = 5   # make an n x n grid of circles
+# make an n x n grid of circles
+if mode == numbers:
+    n = 5
+else:
+    n = 4
 fs = 0.6   # nominal font height in cm
-
-frontLabels = 'C'*25
-backLabels = 'O'*17 + 'N'*8
 
 def printLabel(x, y, label):
     print('<text x="%fcm" y="%fcm" text-anchor="middle" font-family="sans-serif" font-size="%fcm" fill="blue">%s</text>' % (x, y + fs / 2.4, fs, label))
@@ -48,8 +49,8 @@ def printCutCircle(x, y):
 
 print('<svg width="5cm" height="5cm">')
 if mode == front:
-    printAlignmentHole(1, 4)
-    printAlignmentHole(4, 4)
+    printAlignmentHole(1, 3)
+    printAlignmentHole(3, 3)
 i = 0
 for y in range(n):
     for x in range(n):
@@ -59,9 +60,9 @@ for y in range(n):
             printLabel(cx, cy, i + 1)
             printCutCircle(cx, cy)
         elif mode == front:
-            printLabel(cx, cy, frontLabels[i])
+            printLabel(cx, cy, 'O')
         elif mode == back:
-            printLabel(cx, cy, backLabels[i])
+            printLabel(cx, cy, 'N')
             printCutCircle(cx, cy)
         else:
             raise Exception("unknown mode")
