@@ -48,8 +48,8 @@ def printCutCircle(x, y):
 
 print('<svg width="5cm" height="5cm">')
 if mode == front:
-    printAlignmentHole(0, 0)
-    printAlignmentHole(5, 0)
+    printAlignmentHole(1, 4)
+    printAlignmentHole(4, 4)
 i = 0
 for y in range(n):
     for x in range(n):
