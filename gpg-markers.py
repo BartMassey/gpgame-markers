@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 # Copyright © 2014 Bart Massey
+# [This program is licensed under the "MIT License"]
+# Please see the file COPYING in the source
+# distribution of this software for license terms.
 # Generate SVG for laser-cut Glass Plate Game markers
 
 from sys import argv
