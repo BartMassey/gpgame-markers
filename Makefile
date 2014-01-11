@@ -4,7 +4,20 @@
 # distribution of this software for license terms.
 
 
-OUTPUTS = front.svg back.svg numbers.svg
+.SUFFIXES: .svg .pdf
 
-$(OUTPUTS): gpg-markers.py
-	for i in $(OUTPUTS); do python3 ./gpg-markers.py "`basename $$i .svg`" >$$i ; done
+.svg.pdf:
+	cairosvg -d 300 -o $*.pdf $*.svg
+
+SVG = front.svg back.svg numbers.svg
+PDF = front.pdf back.pdf numbers.pdf
+
+pdf: $(PDF)
+
+svg: $(SVG)
+
+$(SVG): gpg-markers.py
+	for i in $(SVG); do python3 ./gpg-markers.py "`basename $$i .svg`" >$$i ; done
+
+clean:
+	-rm -f $(SVG) $(PDF)

@@ -6,7 +6,11 @@ useful for feeding to a laser cutter to make wooden markers
 for the [Glass Plate Game]().
 
 The easiest way to get the files is to just run "make" on
-the Makefile. The markers with the numbers can be cut from
+the Makefile. This will produce PDF by default. If you just
+want SVG or do not have "cairosvg", which is used to
+generate the PDF from the SVG, say "make svg".
+
+The markers with the numbers can be cut from
 the front: set the laser cutter so that the blue is a gentle
 emboss and the black is a full cut.
 
