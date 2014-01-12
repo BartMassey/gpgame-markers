@@ -58,8 +58,8 @@ cutAlignmentHoles n = do
   cutAlignmentHole (n - 1, n - 1)
 
 makeOne :: Int -> Which -> (Int, Int) -> S.Svg
-makeOne n which ix =
-  let i = index ((1, 1), (n, n)) ix in
+makeOne n which ix@(x, y) =
+  let i = index ((1, 1), (n, n)) (y, x) in
   case which of
     Numbers | i >= n^(2 :: Int) - 1 -> cutCircle ix
     Numbers -> do cutText ix $ show $ i + 1; cutCircle ix
