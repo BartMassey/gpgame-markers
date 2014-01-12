@@ -71,11 +71,7 @@ makeMarkers n which = do
   case which of
     Front -> cutAlignmentHoles n
     _ -> return ()
-  block (makeOne n which) [(i, j) | i <- [1..n], j <- [1..n]]
-  where
-    block _ [] = error "overran indices"
-    block a [ix] = a ix
-    block a (ix : ixs) = do _ <- a ix; block a ixs
+  mapM_ (makeOne n which) [(i, j) | i <- [1..n], j <- [1..n]]
 
 renderMarkers :: Which -> IO ()
 renderMarkers which =
