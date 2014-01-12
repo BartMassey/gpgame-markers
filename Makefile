@@ -19,8 +19,8 @@ pdf: $(PDF)
 
 svg: $(SVG)
 
-$(SVG): gpg-markers.py
-	for i in $(SVG); do python3 ./gpg-markers.py "`basename $$i .svg`" >$$i ; done
+$(SVG): gpgame-markers.py
+	for i in $(SVG); do python3 ./gpgame-markers.py "`basename $$i .svg`" >$$i ; done
 
 clean:
 	-rm -f $(SVG) $(PDF)
