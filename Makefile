@@ -12,6 +12,9 @@
 SVG = front.svg back.svg numbers.svg
 PDF = front.pdf back.pdf numbers.pdf
 
+gpgame-markers.zip: $(PDF)
+	zip -r gpgame-markers.zip *.pdf
+
 pdf: $(PDF)
 
 svg: $(SVG)

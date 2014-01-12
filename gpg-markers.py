@@ -60,9 +60,11 @@ for y in range(n):
             printLabel(cx, cy, i + 1)
             printCutCircle(cx, cy)
         elif mode == front:
-            printLabel(cx, cy, 'O')
+            if x < n - 1 or y < n - 1:
+                printLabel(cx, cy, 'O')
         elif mode == back:
-            printLabel(cx, cy, 'N')
+            if x < n - 1 or y < n - 1:
+                printLabel(cx, cy, 'N')
             printCutCircle(cx, cy)
         else:
             raise Exception("unknown mode")
