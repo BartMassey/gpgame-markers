@@ -3,6 +3,8 @@
 # Please see the file COPYING in the source
 # distribution of this software for license terms.
 
+#GENERATOR = python3 ./gpgame-markers.py
+GENERATOR = gpgame-markers
 
 .SUFFIXES: .svg .pdf
 
@@ -19,8 +21,12 @@ pdf: $(PDF)
 
 svg: $(SVG)
 
-$(SVG): gpgame-markers.py
-	for i in $(SVG); do python3 ./gpgame-markers.py "`basename $$i .svg`" >$$i ; done
+$(SVG): $(GENERATOR)
+	for i in $(SVG); do $(GENERATOR) "`basename $$i .svg`" >$$i ; done
+
+gpgame-markers: gpgame-markers.hs
+	ghc -Wall --make gpgame-markers.hs
 
 clean:
-	-rm -f $(SVG) $(PDF) gpgame-markers.zip
+	-rm -f $(SVG) $(PDF) \
+	  gpgame-markers.zip gpgame-markers.hi gpgame-markers

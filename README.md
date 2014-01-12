@@ -1,14 +1,19 @@
 # Glass Plate Game Markers
 Copyright © 2014 Bart Massey
 
-This Python 3 code generates three files of printable SVG
+This package generates three files of printable SVG
 useful for feeding to a laser cutter to make wooden markers
-for the [Glass Plate Game]().
+for the [Glass Plate Game](http://glassplategame.com).
 
 The easiest way to get the files is to just run "make" on
 the Makefile. This will produce PDF by default. If you just
 want SVG or do not have "cairosvg", which is used to
 generate the PDF from the SVG, say "make svg".
+
+By default, the SVG generator used is one written in
+Python 3. If you would prefer a Haskell version of the
+generator, edit the `Makefile`; you must have GHC and the
+`blaze-svg` package installed.
 
 The markers with the numbers can be cut from
 the front: set the laser cutter so that the blue is a gentle
