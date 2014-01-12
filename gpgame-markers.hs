@@ -9,8 +9,8 @@ import Data.Ix (index)
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
 import System.IO
-import Text.Blaze.Internal (stringValue, string)
-import Text.Blaze.Svg.Renderer.String (renderSvg)
+import Text.Blaze (toValue, toMarkup)
+import Text.Blaze.Svg.Renderer.Pretty (renderSvg)
 import Text.Blaze.Svg11 ((!))
 import qualified Text.Blaze.Svg11 as S
 import qualified Text.Blaze.Svg11.Attributes as A
@@ -30,7 +30,7 @@ argd :: [(String, Which)]
 argd = [("numbers", Numbers), ("front", Front), ("back", Back)]
 
 dim :: Double -> S.AttributeValue
-dim n = stringValue $ show n ++ "cm"
+dim n = toValue $ show n ++ "cm"
 
 cutCircle :: (Int, Int) -> S.Svg
 cutCircle (x, y) = do
@@ -45,7 +45,7 @@ cutText (x, y) txt = do
   let ty = fromIntegral y - 0.5 + fontSize / 2.4
   S.text_ ! A.x (dim tx) ! A.y (dim ty) !
    A.fontSize (dim fontSize) ! A.fontFamily "sans-serif" ! 
-   A.textAnchor "middle" ! A.fill "blue" $ string txt
+   A.textAnchor "middle" ! A.fill "blue" $ toMarkup txt
 
 cutAlignmentHole :: (Int, Int) -> S.Svg
 cutAlignmentHole (x, y) = do
