@@ -5,9 +5,6 @@
 
 GENCODE = gpgame-markers.py
 GENERATOR = python3 ./$(GENCODE)
-#GENCODE = gpgame-markers
-#GENERATOR = ./$(GENCODE)
-
 
 .SUFFIXES: .svg .pdf
 
@@ -27,9 +24,5 @@ svg: $(SVG)
 $(SVG): $(GENCODE)
 	for i in $(SVG); do $(GENERATOR) "`basename $$i .svg`" >$$i ; done
 
-./gpgame-markers: gpgame-markers.hs
-	ghc -Wall --make gpgame-markers.hs
-
 clean:
-	-rm -f $(SVG) $(PDF) gpgame-markers.zip \
-	gpgame-markers.hi gpgame-markers.o gpgame-markers
+	-rm -f $(SVG) $(PDF) gpgame-markers.zip

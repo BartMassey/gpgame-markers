@@ -5,28 +5,27 @@ This package generates three files of printable SVG
 useful for feeding to a laser cutter to make wooden markers
 for the [Glass Plate Game](http://glassplategame.com).
 
-The easiest way to get the files is to just run "make" on
-the Makefile. This will produce PDF by default. If you just
-want SVG or do not have "cairosvg", which is used to
-generate the PDF from the SVG, say "make svg".
+The SVG generator is written in Python 3.  The easiest way
+to get the files is to just run "make" on the Makefile. This
+will produce PDF by default. If you just want SVG or do not
+have "cairosvg", which is used to generate the PDF from the
+SVG, say "make svg".
 
-By default, the SVG generator used is one written in
-Python 3. If you would prefer a Haskell version of the
-generator, edit the `Makefile`; you must have GHC installed
-(or some other Haskell compiler, in which case edit the
-Makefile further).
-
-The markers with the numbers can be cut from
-the front: set the laser cutter so that the blue is a gentle
-emboss and the black is a full cut.
+The markers with the numbers can be cut from the front: set
+the laser cutter so that the black is a gentle raster emboss
+and the yellow is a full vector cut.
 
 The other two files comprise front and back of the other
-markers. Print the front first so that you get the two black
-alignment holes useful for cutting the back. I suggest
-taping down a sheet of paper under the wood before cutting
-the front, so that it will be punched at the alignment
-holes. This will let you flip over the wood and line it up
-with the holes in the paper before cutting the back.
+markers. As with the numbers, use raster with the black and
+vector with the yellow. The easiest way is probably to tape
+down the stock and cut the front first, which will free up a
+panel that you can flip over and drop back into the hole to
+cut the back.
+
+There are two other versions of this generator in the repo
+that were written in Haskell, but maintaining generators in
+parallel seemed like a lot of pointless work. Dig them out
+if you like.
 
 This work (such as it is) is licensed under the "MIT
 License". Please see the file COPYING in this distribution
