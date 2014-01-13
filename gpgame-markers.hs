@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 -- Copyright © 2014 Bart Massey
 -- [This program is licensed under the "MIT License"]
 -- Please see the file COPYING in the source
@@ -9,10 +8,7 @@ import Data.Ix (index)
 import System.Environment (getArgs)
 import System.Exit (exitFailure)
 import System.IO (hPutStrLn, stderr)
-import Text.Blaze.Svg.Renderer.Pretty (renderSvg)
-import Text.Blaze.Svg11 ((!))
-import qualified Text.Blaze.Svg11 as S
-import qualified Text.Blaze.Svg11.Attributes as A
+import Text.Printf (printf)
 
 -- nominal baseline-baseline font height in cm
 fontSize :: Double
@@ -28,59 +24,54 @@ data Which = Numbers | Front | Back
 argd :: [(String, Which)]
 argd = [("numbers", Numbers), ("front", Front), ("back", Back)]
 
-dim :: Double -> S.AttributeValue
-dim n = S.toValue $ show n ++ "cm"
+cutCircle :: (Int, Int) -> String
+cutCircle (x, y) =
+  let cx = fromIntegral x - (0.5 :: Double) in
+  let cy = fromIntegral y - (0.5 :: Double) in
+  printf "<circle cx=\"%fcm\" cy=\"%fcm\" r=\"0.5cm\" fill=\"none\" stroke=\"black\" stroke-width=\"1px\"/>\n" cx cy 
 
-cutCircle :: (Int, Int) -> S.Svg
-cutCircle (x, y) = do
-  let cx = fromIntegral x - 0.5
-  let cy = fromIntegral y - 0.5
-  S.circle ! A.cx (dim cx) ! A.cy (dim cy) ! A.r (dim 0.5) !
-   A.fill "none" ! A.stroke "black" ! A.strokeWidth "1px"
+cutText :: (Int, Int) -> String -> String
+cutText (x, y) txt =
+  let tx = fromIntegral x - (0.5 :: Double) in
+  let ty = fromIntegral y - (0.5 :: Double) + fontSize / 2.4 in
+  let tag = printf "<text x=\"%fcm\" y=\"%fcm\" font-size=\"%fcm\" font-family=\"sans-serif\" text-anchor=\"middle\" fill=\"blue\">" tx ty fontSize in
+  tag ++ txt ++ "</text>\n"
+  
 
-cutText :: (Int, Int) -> String -> S.Svg
-cutText (x, y) txt = do
-  let tx = fromIntegral x - 0.5
-  let ty = fromIntegral y - 0.5 + fontSize / 2.4
-  S.text_ ! A.x (dim tx) ! A.y (dim ty) !
-   A.fontSize (dim fontSize) ! A.fontFamily "sans-serif" ! 
-   A.textAnchor "middle" ! A.fill "blue" $ S.toMarkup txt
+cutAlignmentHole :: (Int, Int) -> String
+cutAlignmentHole (x, y) =
+  let cx = fromIntegral x :: Double in
+  let cy = fromIntegral y :: Double in
+  printf "<circle cx=\"%fcm\" cy=\"%fcm\" r=\"0.1cm\" fill=\"black\"/>\n" cx cy 
 
-cutAlignmentHole :: (Int, Int) -> S.Svg
-cutAlignmentHole (x, y) = do
-  let cx = fromIntegral x
-  let cy = fromIntegral y
-  S.circle ! A.cx (dim cx) ! A.cy (dim cy) ! A.r (dim 0.1) ! A.fill "black"
+cutAlignmentHoles :: Int -> String
+cutAlignmentHoles n = 
+  cutAlignmentHole (1, n - 1) ++ cutAlignmentHole (n - 1, n - 1)
 
-cutAlignmentHoles :: Int -> S.Svg
-cutAlignmentHoles n = do
-  cutAlignmentHole (1, n - 1)
-  cutAlignmentHole (n - 1, n - 1)
-
-makeOne :: Int -> Which -> (Int, Int) -> S.Svg
+makeOne :: Int -> Which -> (Int, Int) -> String
 makeOne n which ix@(x, y) =
   let i = index ((1, 1), (n, n)) (y, x) in
   case which of
     Numbers | i >= n^(2 :: Int) - 1 -> cutCircle ix
-    Numbers -> do cutText ix $ show $ i + 1; cutCircle ix
+    Numbers -> (cutText ix $ show $ i + 1) ++ cutCircle ix
     Front -> cutText ix "O"
-    Back -> cutText ix "N"
+    Back -> (cutText ix "N" ++ cutCircle ix)
 
-makeMarkers :: Int -> Which -> S.Svg
-makeMarkers n which = do
-  case which of
-    Front -> cutAlignmentHoles n
-    _ -> return ()
-  mapM_ (makeOne n which) [(i, j) | i <- [1..n], j <- [1..n]]
+makeMarkers :: Int -> Which -> String
+makeMarkers n which =
+  maybeHoles which ++
+   concatMap (makeOne n which) [(i, j) | i <- [1..n], j <- [1..n]]
+  where
+    maybeHoles Front = cutAlignmentHoles n
+    maybeHoles _ = ""
 
 renderMarkers :: Which -> IO ()
-renderMarkers which =
-  putStrLn $ renderSvg $ docHeader $ makeMarkers n which
+renderMarkers which = do
+  _ <- printf "<svg version=\"1.1\" width=\"%dcm\" height=\"%dcm\">\n" n n
+  putStr $ makeMarkers n which
+  putStrLn "</svg>"
   where
     n = case which of Numbers -> 5; _ -> 4
-    docHeader =
-      S.docTypeSvg ! A.version "1.1" !
-       A.width (dim $ fromIntegral n) ! A.height (dim $ fromIntegral n)
 
 main :: IO ()
 main = do
