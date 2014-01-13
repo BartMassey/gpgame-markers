@@ -64,7 +64,7 @@ makeOne n which ix@(x, y) =
     Numbers | i >= n^(2 :: Int) - 1 -> cutCircle ix
     Numbers -> do cutText ix $ show $ i + 1; cutCircle ix
     Front -> cutText ix "O"
-    Back -> cutText ix "N"
+    Back -> do cutText ix "N"; cutCircle ix
 
 makeMarkers :: Int -> Which -> S.Svg
 makeMarkers n which = do
