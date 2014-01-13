@@ -12,8 +12,9 @@ generate the PDF from the SVG, say "make svg".
 
 By default, the SVG generator used is one written in
 Python 3. If you would prefer a Haskell version of the
-generator, edit the `Makefile`; you must have GHC and the
-`blaze-svg` package installed.
+generator, edit the `Makefile`; you must have GHC installed
+(or some other Haskell compiler, in which case edit the
+Makefile further).
 
 The markers with the numbers can be cut from
 the front: set the laser cutter so that the blue is a gentle
