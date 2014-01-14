@@ -38,19 +38,18 @@ else:
 fs = 0.6   # nominal font height in cm
 
 def printLabel(x, y, label):
-    print('<text x="%fcm" y="%fcm" text-anchor="middle" font-family="sans-serif" font-size="%fcm" fill="blue">%s</text>' % (x, y + fs / 2.4, fs, label))
+    print('<text x="%fcm" y="%fcm" text-anchor="middle" font-family="sans-serif" font-size="%fcm" fill="black">%s</text>' % (x, y + fs / 2.4, fs, label))
 
-def printAlignmentHole(x, y):
-    print('<circle cx="%fcm" cy="%fcm" r="0.1cm" fill="black"/>' % (x, y))
+def printFrame():
+    print('<rect x="0cm" y="0cm" width="%dcm" height="%dcm" fill="none" stroke="yellow" stroke-width="1px"/>' % (n, n))
 
 def printCutCircle(x, y):
-    print('<circle cx="%fcm" cy="%fcm" r="0.5cm" stroke="black" fill="none" stroke-width="1px"/>' % (x, y))
+    print('<circle cx="%fcm" cy="%fcm" r="0.5cm" stroke="yellow" fill="none" stroke-width="1px"/>' % (x, y))
 
 
-print('<svg width="5cm" height="5cm">')
+print('<svg width="%d.1cm" height="%d.1cm">' % (n, n))
 if mode == front:
-    printAlignmentHole(1, 3)
-    printAlignmentHole(3, 3)
+    printFrame()
 i = 0
 for y in range(n):
     for x in range(n):
