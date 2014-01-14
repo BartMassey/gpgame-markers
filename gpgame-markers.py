@@ -7,6 +7,10 @@
 
 from sys import argv
 
+fs = 0.6     # nominal font height in cm
+kerf = 0.2   # nominal kerf width in cm
+pad = 0.1    # nominal doc edge pad width in cm
+
 def usage():
     raise Exception("usage: gpg-markers <front|back|numbers>")
 
@@ -35,26 +39,30 @@ if mode == numbers:
     n = 5
 else:
     n = 4
-fs = 0.6   # nominal font height in cm
 
 def printLabel(x, y, label):
     print('<text x="%fcm" y="%fcm" text-anchor="middle" font-family="sans-serif" font-size="%fcm" fill="black">%s</text>' % (x, y + fs / 2.4, fs, label))
 
-def printFrame():
-    print('<rect x="0cm" y="0cm" width="%dcm" height="%dcm" fill="none" stroke="yellow" stroke-width="1px"/>' % (n, n))
+def printFrame(color):
+    xy = pad
+    wh = n * (1 + kerf) + kerf
+    print('<rect x="%gcm" y="%gcm" width="%gcm" height="%gcm" fill="none" stroke="%s" stroke-width="1px"/>' % (xy, xy, wh, wh, color))
 
 def printCutCircle(x, y):
     print('<circle cx="%fcm" cy="%fcm" r="0.5cm" stroke="yellow" fill="none" stroke-width="1px"/>' % (x, y))
 
-
-print('<svg width="%d.1cm" height="%d.1cm">' % (n, n))
+d = n * (1 + kerf) + kerf + 2 * pad
+print('<svg width="%gcm" height="%gcm">' % (d, d))
 if mode == front:
-    printFrame()
+    printFrame('yellow')
+elif mode == back:
+    printFrame('black')
+
 i = 0
 for y in range(n):
     for x in range(n):
-        cx = x + 0.5
-        cy = y + 0.5
+        cx = x * (1 + kerf) + kerf + pad + 0.5
+        cy = y * (1 + kerf) + kerf + pad + 0.5
         if mode == numbers:
             label = str(i + 1)
             if label == '6' or label == '9':
