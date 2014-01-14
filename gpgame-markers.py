@@ -59,10 +59,10 @@ for y in range(n):
             printLabel(cx, cy, i + 1)
             printCutCircle(cx, cy)
         elif mode == front:
-            if x < n - 1 or y < n - 1:
+            if x != n - 1 or y != n - 1:
                 printLabel(cx, cy, 'O')
         elif mode == back:
-            if x < n - 1 or y < n - 1:
+            if x != 0 or y != n - 1:
                 printLabel(cx, cy, 'N')
             printCutCircle(cx, cy)
         else:
