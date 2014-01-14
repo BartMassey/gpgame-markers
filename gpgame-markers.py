@@ -56,7 +56,10 @@ for y in range(n):
         cx = x + 0.5
         cy = y + 0.5
         if mode == numbers:
-            printLabel(cx, cy, i + 1)
+            label = str(i + 1)
+            if label == '6' or label == '9':
+                label += '.'
+            printLabel(cx, cy, label)
             printCutCircle(cx, cy)
         elif mode == front:
             if x < n - 1 or y < n - 1:
