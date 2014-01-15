@@ -7,9 +7,12 @@
 
 from sys import argv
 
-fs = 0.6     # nominal font height in cm
-kerf = 0.2   # nominal kerf width in cm
-pad = 0.1    # nominal doc edge pad width in cm
+# All dimensions are in units of cm.
+
+fs = 0.6        # nominal font height
+kerf = 0.2      # nominal kerf width
+pad = 0.1       # nominal doc edge pad width
+dRegMark = 0.1  # nominal length of registration mark
 
 def usage():
     raise Exception("usage: gpg-markers <front|back|numbers>")
@@ -43,26 +46,42 @@ else:
 def printLabel(x, y, label):
     print('<text x="%fcm" y="%fcm" text-anchor="middle" font-family="sans-serif" font-size="%fcm" fill="black">%s</text>' % (x, y + fs / 2.4, fs, label))
 
-def printFrame(color):
-    xy = pad
-    wh = n * (1 + kerf) + kerf
-    print('<rect x="%gcm" y="%gcm" width="%gcm" height="%gcm" fill="none" stroke="%s" stroke-width="1px"/>' % (xy, xy, wh, wh, color))
+# How to get to the center of the nth marker.
+# (But add the pad and kerf as needed.)
+def dSpacing(c):
+    return c * (1 + kerf)
+
+dFrame = dSpacing(n) + kerf   # width and height of framing rectangle
+
+def printFrame():
+    print('<rect x="%gcm" y="%gcm" width="%gcm" height="%gcm" fill="none" stroke="yellow" stroke-width="1px"/>' % (pad, pad, dFrame, dFrame))
+
+def printRegLine(x1, y1, x2, y2):
+    print('<line x1="%fcm" y1="%fcm" x2="%fcm" y2="%fcm" stroke="black" stroke-width="1px"/>' % (x1, y1, x2, y2))
+
+def printRegMark(x, y, dx, dy):
+    printRegLine(x, y, x, y + dy)
+    printRegLine(x, y, x + dx, y)
+
+def printRegMarks():
+    printRegMark(pad, pad, dRegMark, dRegMark)
+    printRegMark(pad + dFrame, pad + dFrame, -dRegMark, -dRegMark)
 
 def printCutCircle(x, y):
     print('<circle cx="%fcm" cy="%fcm" r="0.5cm" stroke="yellow" fill="none" stroke-width="1px"/>' % (x, y))
 
-d = n * (1 + kerf) + kerf + 2 * pad
-print('<svg width="%gcm" height="%gcm">' % (d, d))
+dPage = dFrame + 2 * pad
+print('<svg width="%fcm" height="%fcm">' % (dPage, dPage))
 if mode == front:
-    printFrame('yellow')
+    printFrame()
 elif mode == back:
-    printFrame('black')
+    printRegMarks()
 
 i = 0
 for y in range(n):
     for x in range(n):
-        cx = x * (1 + kerf) + kerf + pad + 0.5
-        cy = y * (1 + kerf) + kerf + pad + 0.5
+        cx = dSpacing(x) + kerf + pad + 0.5
+        cy = dSpacing(y) + kerf + pad + 0.5
         if mode == numbers:
             label = str(i + 1)
             if label == '6' or label == '9':
