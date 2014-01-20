@@ -7,12 +7,14 @@
 
 from sys import argv
 
-# All dimensions are in units of cm.
+# All dimensions are in units of mm
 
-fs = 0.6        # nominal font height
-kerf = 0.2      # nominal kerf width
-pad = 0.1       # nominal doc edge pad width
-dRegMark = 0.1  # nominal length of registration mark
+fs = 6          # nominal font height
+kerf = 1        # nominal kerf width
+pad = 1         # nominal doc edge pad width
+dRegMark = 2    # nominal length of registration mark
+markerR = 7     # radius of marker
+markerD = 2 * markerR   # diameter of marker
 
 def usage():
     raise Exception("usage: gpg-markers <front|back|numbers>")
@@ -38,26 +40,23 @@ if mode == 0:
     usage()
 
 # make an n x n grid of circles
-if mode == numbers:
-    n = 5
-else:
-    n = 4
+n = 5
 
 def printLabel(x, y, label):
-    print('<text x="%fcm" y="%fcm" text-anchor="middle" font-family="sans-serif" font-size="%fcm" fill="black">%s</text>' % (x, y + fs / 2.4, fs, label))
+    print('<text x="%fmm" y="%fmm" text-anchor="middle" font-family="sans-serif" font-size="%fmm" fill="black">%s</text>' % (x, y + fs / 2.4, fs, label))
 
 # How to get to the center of the nth marker.
 # (But add the pad and kerf as needed.)
 def dSpacing(c):
-    return c * (1 + kerf)
+    return c * (markerD + kerf)
 
 dFrame = dSpacing(n) + kerf   # width and height of framing rectangle
 
 def printFrame():
-    print('<rect x="%gcm" y="%gcm" width="%gcm" height="%gcm" fill="none" stroke="yellow" stroke-width="1px"/>' % (pad, pad, dFrame, dFrame))
+    print('<rect x="%fmm" y="%fmm" width="%fmm" height="%fmm" fill="none" stroke="yellow" stroke-width="1px"/>' % (pad, pad, dFrame, dFrame))
 
 def printRegLine(x1, y1, x2, y2):
-    print('<line x1="%fcm" y1="%fcm" x2="%fcm" y2="%fcm" stroke="black" stroke-width="1px"/>' % (x1, y1, x2, y2))
+    print('<line x1="%fmm" y1="%fmm" x2="%fmm" y2="%fmm" stroke="black" stroke-width="1px"/>' % (x1, y1, x2, y2))
 
 def printRegMark(x, y, dx, dy):
     printRegLine(x, y, x, y + dy)
@@ -68,10 +67,10 @@ def printRegMarks():
     printRegMark(pad + dFrame, pad + dFrame, -dRegMark, -dRegMark)
 
 def printCutCircle(x, y):
-    print('<circle cx="%fcm" cy="%fcm" r="0.5cm" stroke="yellow" fill="none" stroke-width="1px"/>' % (x, y))
+    print('<circle cx="%fmm" cy="%fmm" r="%fmm" stroke="yellow" fill="none" stroke-width="1px"/>' % (x, y, markerR))
 
 dPage = dFrame + 2 * pad
-print('<svg width="%fcm" height="%fcm">' % (dPage, dPage))
+print('<svg width="%fmm" height="%fmm">' % (dPage, dPage))
 if mode == front:
     printFrame()
 elif mode == back:
@@ -80,20 +79,21 @@ elif mode == back:
 i = 0
 for y in range(n):
     for x in range(n):
-        cx = dSpacing(x) + kerf + pad + 0.5
-        cy = dSpacing(y) + kerf + pad + 0.5
+        cx = dSpacing(x) + kerf + pad + markerR
+        cy = dSpacing(y) + kerf + pad + markerR
         if mode == numbers:
             label = str(i + 1)
             if label == '6' or label == '9':
                 label += '.'
-            printLabel(cx, cy, label)
+            if x != n - 1 or y != n - 1:
+                printLabel(cx, cy, label)
             printCutCircle(cx, cy)
         elif mode == front:
             if x != n - 1 or y != n - 1:
                 printLabel(cx, cy, 'O')
         elif mode == back:
             if x != 0 or y != n - 1:
-                printLabel(cx, cy, 'N')
+                printLabel(cx, cy, 'V')
             printCutCircle(cx, cy)
         else:
             raise Exception("unknown mode")
