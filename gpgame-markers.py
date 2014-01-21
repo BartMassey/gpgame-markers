@@ -9,7 +9,9 @@ from sys import argv
 
 # All dimensions are in units of mm
 
-fs = 6          # nominal font height
+fs = 7          # nominal font height
+fontDrop = 3    # XXX drop the font by this amount for vertical centering,
+                # since nobody's SVG renderer supports alignment-baseline
 kerf = 1        # nominal kerf width
 pad = 1         # nominal doc edge pad width
 dRegMark = 2    # nominal length of registration mark
@@ -43,7 +45,7 @@ if mode == 0:
 n = 5
 
 def printLabel(x, y, label):
-    print('<text x="%fmm" y="%fmm" text-anchor="middle" font-family="sans-serif" font-size="%fmm" fill="black">%s</text>' % (x, y + fs / 2.4, fs, label))
+    print('<text x="%fmm" y="%fmm" text-anchor="middle" font-family="sans-serif" font-size="%fmm" fill="black">%s</text>' % (x, y + fontDrop, fs, label))
 
 # How to get to the center of the nth marker.
 # (But add the pad and kerf as needed.)
