@@ -11,8 +11,8 @@ GENERATOR = python3 ./$(GENCODE)
 .svg.pdf:
 	cairosvg -d 300 -o $*.pdf $*.svg
 
-SVG = front.svg back.svg numbers.svg
-PDF = front.pdf back.pdf numbers.pdf
+SVG = front.svg back.svg
+PDF = front.pdf back.pdf
 
 gpgame-markers.zip: $(PDF)
 	zip -r gpgame-markers.zip *.pdf
