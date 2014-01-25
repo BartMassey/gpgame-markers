@@ -16,7 +16,7 @@ fontDrop = 3    # XXX drop the font by this amount for vertical centering,
 kerf = 1        # nominal "kerf" width (actually inter-marker spacing)
 pad = 1         # nominal doc edge pad width
 dRegMark = 2    # nominal length of registration mark
-markerR = 7     # radius of marker
+markerR = 6.5   # radius of marker
 markerD = 2 * markerR   # diameter of marker
 
 def usage():
