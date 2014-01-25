@@ -9,15 +9,17 @@ from sys import argv
 
 # All dimensions are in units of mm
 
-fs = 7          # nominal font height
-fontDrop = 3    # XXX drop the font by this amount for vertical centering,
+fs = 7.0        # nominal font height
+fontDrop = 3.0  # XXX drop the font by this amount for vertical centering,
                 # unless the SVG renderer supports alignment-baseline
                 # or display-anchor
-kerf = 1        # nominal "kerf" width (actually inter-marker spacing)
-pad = 1         # nominal doc edge pad width
-dRegMark = 2    # nominal length of registration mark
+kerf = 1.0      # nominal "kerf" width (actually inter-marker spacing)
+setPad = 4.0    # space between sets
+dRegMark = 2.0  # length of registration mark
 markerR = 6.5   # radius of marker
-markerD = 2 * markerR   # diameter of marker
+markerD = 2.0 * markerR   # diameter of marker
+
+debugSpacing = False   # gives a green square useful in spacing checks
 
 def usage():
     raise Exception("usage: gpgame-markers: <front|back>")
@@ -58,6 +60,12 @@ def printSet(gx, gy, subset):
         print(('<circle cx="%fmm" cy="%fmm" r="%fmm" ' + \
               'stroke="yellow" fill="none" stroke-width="1px"/>') % \
                   (gx + x, gy + y, markerR))
+
+    if debugSpacing:
+        setSquare = dSpacing(n) - kerf
+        print(('<rect x="%fmm" y="%fmm" width="%fmm" height="%fmm" ' + \
+              'fill="none" stroke="green" stroke-width="1px"/>') % \
+                  (gx, gy, setSquare, setSquare))
 
     i = 0
     for y in range(n):
@@ -102,14 +110,24 @@ def printRegMarks(x, y, width, height):
     printRegMark(x + width, y + height, -dRegMark, -dRegMark)
 
 dFrame = dSpacing(n)
-print('<svg width="%fmm" height="%fmm">' % \
-          (dFrame + 2 * pad + kerf, 2 * dFrame + 2 * pad + 2 * kerf))
-printSet(pad + kerf, pad + kerf, numbers)
-printSet(pad + kerf, dFrame + pad + 2 * kerf, letters)
-if mode == front:
-    printFrame(pad, pad, dFrame + kerf, 2 * dFrame + 2 * kerf)
-elif mode == back:
-    printRegMarks(pad, pad, dFrame + kerf, 2 * dFrame + 2 * kerf)
-else:
-    raise Exception("unknown mode")
+print('<svg width="16in" height="12in">')
+
+frameWidth = dFrame + kerf
+frameHeight = 2 * dFrame + kerf
+for r in range(2):
+    for c in range(5):
+        gx = c * (frameWidth + setPad) + setPad
+        gy = r * (frameHeight + setPad) + setPad
+        setX = gx + kerf
+        setY1 = gy + kerf
+        setY2 = gy + dFrame + kerf
+        printSet(setX, setY1, numbers)
+        printSet(setX, setY2, letters)
+        if mode == front:
+            printFrame(gx, gy, frameWidth, frameHeight)
+        elif mode == back:
+            printRegMarks(gx, gy, frameWidth, frameHeight)
+        else:
+            raise Exception("unknown mode")
+
 print('</svg>')
