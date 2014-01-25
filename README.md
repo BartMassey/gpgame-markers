@@ -13,7 +13,12 @@ SVG, say "make svg".
 
 The markers with the numbers can be cut from the front: set
 the laser cutter so that the black is a gentle raster emboss
-and the yellow is a full vector cut.
+and the yellow is a full vector cut. For our cutter, the
+relevant parameters are:
+
+  * Vector Current 100
+  * Raster Power 70 Speed 80
+  * Vector Power 100 Speed 75
 
 The other two files comprise front and back of the other
 markers. As with the numbers, use raster with the black and
